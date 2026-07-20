@@ -9,8 +9,8 @@
     --ice: #f4f8fb;
     --smoke: #333333;
     --graphite: #474747;
-    --ash: #707070;
-    --mist: #858585;
+    --ash: #5c5c5e;
+    --mist: #6e6e70;
     --onyx: #000000;
     --pebble: #e2e2e5;
     --hairline: #e5e5e7;
@@ -110,24 +110,6 @@
     to   { background-position: 420px 0, 0 420px; }
   }
   .hero-inner { position: relative; z-index: 1; }
-  .hero-readout {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    margin-bottom: 22px;
-  }
-  .readout-chip {
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.06em;
-    color: var(--ash);
-    border: 1px solid var(--pebble);
-    border-radius: 100px;
-    padding: 5px 12px;
-    background: rgba(255,255,255,.6);
-  }
-  .readout-chip strong { color: var(--apple-blue); font-weight: 600; }
 
   h1 {
     font-family: var(--font);
@@ -274,10 +256,10 @@
   }
   .filter-group-label {
     font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.09em;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--mist);
+    color: var(--ash);
     margin-right: 4px;
   }
   .pill {
@@ -285,8 +267,8 @@
     background: #fff;
     color: var(--graphite);
     border-radius: 100px;
-    padding: 5px 12px;
-    font-size: 13px;
+    padding: 6px 13px;
+    font-size: 14px;
     transition: border-color .16s ease, color .16s ease, background .16s ease;
   }
   .pill:hover { border-color: var(--apple-blue); color: var(--apple-blue); }
@@ -348,14 +330,14 @@
   }
   .cat-copy-block .label {
     font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.09em;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--mist);
+    color: var(--ash);
     display: block;
     margin-bottom: 5px;
   }
-  .cat-copy-block p { margin: 0; color: var(--graphite); font-size: var(--fs-body-sm); line-height: 1.5; }
+  .cat-copy-block p { margin: 0; color: var(--smoke); font-size: 15.5px; line-height: 1.55; }
 
   /* ---------- Card grid ---------- */
   .card-grid {
@@ -428,9 +410,9 @@
   }
   .card-badges { display: flex; flex-wrap: wrap; gap: 6px; }
   .badge {
-    font-size: 11px;
+    font-size: 12.5px;
     font-weight: 500;
-    padding: 3px 9px;
+    padding: 4px 10px;
     border-radius: 100px;
     background: var(--ice);
     color: var(--graphite);
@@ -440,67 +422,34 @@
 
   h3.card-title {
     margin: 0;
-    font-size: 17px;
+    font-size: 19px;
     font-weight: 600;
     letter-spacing: -0.006em;
     color: var(--carbon);
-    line-height: 1.3;
-  }
-  .card-company {
-    font-size: 12px;
-    color: var(--mist);
-    margin-top: -6px;
+    line-height: 1.32;
   }
 
   .card-field .label {
     font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
+    font-size: 11px;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: var(--mist);
+    color: var(--graphite);
     display: block;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
   }
-  .card-field p { margin: 0; font-size: 13.5px; color: var(--graphite); line-height: 1.45; }
+  .card-field p { margin: 0; font-size: 15px; color: var(--smoke); line-height: 1.5; }
 
-  .value-list { display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .value-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
   .value-item {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 12.5px;
+    gap: 7px;
+    font-size: 14px;
     color: var(--success);
     font-weight: 500;
   }
-  .value-item svg { width: 13px; height: 13px; flex: none; }
-
-  .card-actions {
-    margin-top: auto;
-    display: flex;
-    gap: 10px;
-    padding-top: 4px;
-  }
-  .btn {
-    flex: 1;
-    text-align: center;
-    font-size: 13px;
-    font-weight: 500;
-    padding: 9px 10px;
-    border-radius: 100px;
-    transition: background .16s ease, color .16s ease, border-color .16s ease;
-  }
-  .btn-outline {
-    border: 1px solid var(--pebble);
-    color: var(--carbon);
-    background: transparent;
-  }
-  .btn-outline:hover { border-color: var(--carbon); }
-  .btn-solid {
-    border: 1px solid var(--apple-blue);
-    background: var(--apple-blue);
-    color: #fff;
-  }
-  .btn-solid:hover { background: #0060c2; }
+  .value-item svg { width: 14px; height: 14px; flex: none; }
 
   .card-empty {
     grid-column: 1 / -1;
@@ -511,37 +460,6 @@
   }
 
   /* ---------- CTA ---------- */
-  section.final-cta {
-    margin: 96px 22px 80px;
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
-    background: var(--carbon);
-    border-radius: 24px;
-    padding: 72px 32px;
-    text-align: center;
-  }
-  section.final-cta h2 {
-    color: #fff;
-    font-weight: 600;
-    font-size: clamp(1.7rem, 4vw, var(--fs-heading));
-    max-width: 640px;
-    margin: 0 auto 28px;
-    letter-spacing: -0.012em;
-    text-wrap: balance;
-  }
-  .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
-  .cta-btn {
-    padding: 13px 26px;
-    border-radius: 100px;
-    font-size: 15px;
-    font-weight: 500;
-  }
-  .cta-btn.primary { background: var(--apple-blue); color: #fff; }
-  .cta-btn.primary:hover { background: var(--signal-blue); }
-  .cta-btn.secondary { border: 1px solid #4a4a4c; color: #fff; }
-  .cta-btn.secondary:hover { border-color: #fff; }
-
   .section-divider {
     max-width: 1280px;
     margin: 0 auto;
@@ -553,19 +471,14 @@
 <header class="hero">
   <div class="hero-field" aria-hidden="true"></div>
   <div class="hero-inner">
-    <div class="hero-readout">
-      <span class="readout-chip">CCTV&#8209;NATIVE &middot; NO NEW HARDWARE</span>
-      <span class="readout-chip">DET_CONF <strong>0.99</strong></span>
-      <span class="readout-chip">29 LIVE DEPLOYMENTS</span>
-    </div>
     <h1>Computer Vision in Industrial Operations</h1>
-    <p class="hero-sub">Explore real-world deployments where Visotonics turns existing CCTV infrastructure into intelligent inspection, monitoring and automation systems &mdash; no new cameras required.</p>
+    <p class="hero-sub">Real-world deployments showing how computer vision runs on ordinary CCTV infrastructure to power inspection, monitoring and automation across industrial sites.</p>
   </div>
 </header>
 
 <section class="intro">
   <div class="measure">
-    <p>Every case study below runs on the same cameras already installed on a customer's line, dock or yard. Browse by capability &mdash; safety, counting, warehouse intelligence, production, inspection and analytics &mdash; to see how each solution deploys on infrastructure you already own.</p>
+    <p>Every case study below runs on the same cameras already installed on a site's line, dock or yard. Browse by capability &mdash; safety, counting, warehouse intelligence, production, inspection and analytics &mdash; to see how each solution deploys on infrastructure that's already in place.</p>
   </div>
 </section>
 
@@ -627,14 +540,6 @@
 </section>
 
 <main id="categoriesRoot"></main>
-
-<section class="final-cta">
-  <h2>Ready to transform your existing CCTV cameras into intelligent industrial monitoring systems?</h2>
-  <div class="cta-actions">
-    <a class="cta-btn primary" href="https://visotonics.com/contact">Book a Demo</a>
-    <a class="cta-btn secondary" href="https://visotonics.com/contact">Talk to an Expert</a>
-  </div>
-</section>
 
 <script>
 (function () {
@@ -769,29 +674,21 @@
     var valueItems = c.value.map(function (v) {
       return '<div class="value-item">' + CHECK_ICON + '<span>' + v + '</span></div>';
     }).join("");
-    var companyLine = c.company ? c.company : "Field Deployment";
-    var driveUrl = "https://drive.google.com/file/d/" + c.drive + "/view";
-    var contactUrl = "https://visotonics.com/contact";
+    var companyLine = c.company ? c.company : "";
+    var searchTerms = (c.title + " " + companyLine + " " + c.industry + " " + c.capabilities.join(" ")).toLowerCase();
 
     return (
-      '<article class="card" data-cat="' + c.cat + '" data-industry="' + c.industry + '" data-capabilities="' + c.capabilities.join("|") + '" data-search="' + (c.title + " " + companyLine + " " + c.industry + " " + c.capabilities.join(" ")).toLowerCase() + '">' +
+      '<article class="card" data-cat="' + c.cat + '" data-industry="' + c.industry + '" data-capabilities="' + c.capabilities.join("|") + '" data-search="' + searchTerms + '">' +
         '<div class="card-video" data-yt="' + c.yt + '">' +
           '<img class="poster" loading="lazy" alt="" src="https://img.youtube.com/vi/' + c.yt + '/hqdefault.jpg">' +
           '<span class="play-badge">LIVE FEED</span>' +
         '</div>' +
         '<div class="card-body">' +
           '<div class="card-badges">' + badges + '</div>' +
-          '<div>' +
-            '<h3 class="card-title">' + c.title + '</h3>' +
-            '<div class="card-company">' + companyLine + '</div>' +
-          '</div>' +
+          '<h3 class="card-title">' + c.title + '</h3>' +
           '<div class="card-field"><span class="label">Business Problem</span><p>' + c.problem + '</p></div>' +
           '<div class="card-field"><span class="label">Solution</span><p>' + c.solution + '</p></div>' +
           '<div class="value-list">' + valueItems + '</div>' +
-          '<div class="card-actions">' +
-            '<a class="btn btn-outline" href="' + driveUrl + '" target="_blank" rel="noopener">Read More</a>' +
-            '<a class="btn btn-solid" href="' + contactUrl + '">Book Demo</a>' +
-          '</div>' +
         '</div>' +
       '</article>'
     );
