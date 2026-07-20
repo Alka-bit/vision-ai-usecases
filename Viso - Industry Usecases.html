@@ -1,0 +1,998 @@
+<title>Case Studies — Computer Vision in Industrial Operations</title>
+<style>
+  :root {
+    --apple-blue: #0071e3;
+    --link-blue: #0066cc;
+    --signal-blue: #2997ff;
+    --carbon: #1d1d1f;
+    --frost: #f5f5f7;
+    --ice: #f4f8fb;
+    --smoke: #333333;
+    --graphite: #474747;
+    --ash: #707070;
+    --mist: #858585;
+    --onyx: #000000;
+    --pebble: #e2e2e5;
+    --hairline: #e5e5e7;
+    --success: #1a7f37;
+    --success-tint: #eaf6ee;
+    --card-bg: #ffffff;
+    --radius-lg: 18px;
+    --radius-md: 12px;
+    --radius-sm: 8px;
+    --shadow-rest: 0 1px 2px rgba(0,0,0,.04), 0 1px 1px rgba(0,0,0,.03);
+    --shadow-hover: 0 20px 40px rgba(0,0,0,.09), 0 4px 12px rgba(0,0,0,.06);
+
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Roboto Mono", "IBM Plex Mono", Menlo, Consolas, monospace;
+
+    --fs-caption: 12px;    --lh-caption: 1.33;    --ls-caption: -0.22px;
+    --fs-body-sm: 14px;    --lh-body-sm: 1.29;    --ls-body-sm: -0.224px;
+    --fs-body: 17px;       --lh-body: 1.47;       --ls-body: -0.272px;
+    --fs-subheading: 21px; --lh-subheading: 1.24; --ls-subheading: -0.105px;
+    --fs-heading-sm: 28px; --lh-heading-sm: 1.18; --ls-heading-sm: 0.196px;
+    --fs-heading: 40px;    --lh-heading: 1.14;    --ls-heading: 0.44px;
+    --fs-heading-lg: 44px; --lh-heading-lg: 1.18; --ls-heading-lg: -0.44px;
+    --fs-display: 56px;    --lh-display: 1.07;    --ls-display: 0.616px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--frost);
+    color: var(--carbon);
+    font-family: var(--font);
+    font-weight: 400;
+    font-size: var(--fs-body);
+    line-height: var(--lh-body);
+    letter-spacing: var(--ls-body);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--link-blue); text-decoration: none; }
+  a:focus-visible, button:focus-visible, iframe:focus-visible, video:focus-visible, input:focus-visible {
+    outline: 2px solid var(--apple-blue); outline-offset: 3px;
+  }
+  button { font-family: inherit; cursor: pointer; }
+
+  .measure {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 22px;
+    text-align: center;
+  }
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 0 20px; }
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* ---------- Hero ---------- */
+  header.hero {
+    position: relative;
+    padding: 96px 22px 64px;
+    text-align: center;
+    overflow: hidden;
+    background: var(--frost);
+  }
+  .hero-field {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.55;
+    background-image:
+      linear-gradient(var(--pebble) 1px, transparent 1px),
+      linear-gradient(90deg, var(--pebble) 1px, transparent 1px);
+    background-size: 42px 42px;
+    -webkit-mask-image: radial-gradient(ellipse 60% 70% at 50% 30%, #000 40%, transparent 85%);
+    mask-image: radial-gradient(ellipse 60% 70% at 50% 30%, #000 40%, transparent 85%);
+    animation: driftField 40s linear infinite;
+  }
+  @keyframes driftField {
+    from { background-position: 0 0, 0 0; }
+    to   { background-position: 420px 0, 0 420px; }
+  }
+  .hero-inner { position: relative; z-index: 1; }
+  .hero-readout {
+    display: flex;
+    justify-content: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .readout-chip {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ash);
+    border: 1px solid var(--pebble);
+    border-radius: 100px;
+    padding: 5px 12px;
+    background: rgba(255,255,255,.6);
+  }
+  .readout-chip strong { color: var(--apple-blue); font-weight: 600; }
+
+  h1 {
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(2.2rem, 6vw, var(--fs-display));
+    line-height: var(--lh-display);
+    letter-spacing: -0.014em;
+    color: var(--carbon);
+    max-width: 900px;
+    margin: 0 auto;
+    text-wrap: balance;
+  }
+  .hero-sub {
+    max-width: 640px;
+    margin: 20px auto 0;
+    font-size: var(--fs-subheading);
+    line-height: var(--lh-subheading);
+    letter-spacing: var(--ls-subheading);
+    color: var(--graphite);
+    text-wrap: balance;
+  }
+
+  /* ---------- Intro ---------- */
+  section.intro {
+    padding: 8px 22px 56px;
+  }
+  section.intro p {
+    max-width: 760px;
+    margin: 0 auto;
+    color: var(--graphite);
+    font-size: var(--fs-body);
+  }
+
+  /* ---------- Stats ---------- */
+  section.stats {
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    padding: 40px 22px;
+  }
+  .stats-grid {
+    max-width: 980px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    text-align: center;
+  }
+  @media (max-width: 720px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  .stat-num {
+    font-family: var(--font);
+    font-weight: 600;
+    font-size: clamp(1.7rem, 4vw, var(--fs-heading));
+    letter-spacing: -0.01em;
+    color: var(--carbon);
+  }
+  .stat-label {
+    margin-top: 6px;
+    font-size: var(--fs-caption);
+    letter-spacing: 0.02em;
+    color: var(--ash);
+  }
+
+  /* ---------- Sticky category nav ---------- */
+  nav.cat-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(245,245,247,.86);
+    backdrop-filter: saturate(180%) blur(14px);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .cat-nav-scroll {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 10px 22px;
+    scrollbar-width: none;
+  }
+  .cat-nav-scroll::-webkit-scrollbar { display: none; }
+  .cat-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 100px;
+    padding: 7px 14px;
+    font-size: var(--fs-body-sm);
+    font-weight: 500;
+    color: var(--graphite);
+    transition: background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .cat-nav-btn svg { width: 15px; height: 15px; flex: none; }
+  .cat-nav-btn:hover { background: var(--ice); }
+  .cat-nav-btn.active {
+    background: var(--carbon);
+    color: #fff;
+    border-color: var(--carbon);
+  }
+
+  /* ---------- Filters ---------- */
+  section.filters {
+    padding: 40px 22px 8px;
+  }
+  .filters-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+  .search-row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 18px;
+  }
+  .search-input {
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid var(--pebble);
+    background: #fff;
+    border-radius: 100px;
+    padding: 10px 18px;
+    font-size: var(--fs-body-sm);
+    color: var(--carbon);
+  }
+  .search-input::placeholder { color: var(--mist); }
+
+  .filter-groups {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 28px;
+  }
+  .filter-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+  }
+  .filter-group-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--mist);
+    margin-right: 4px;
+  }
+  .pill {
+    border: 1px solid var(--pebble);
+    background: #fff;
+    color: var(--graphite);
+    border-radius: 100px;
+    padding: 5px 12px;
+    font-size: 13px;
+    transition: border-color .16s ease, color .16s ease, background .16s ease;
+  }
+  .pill:hover { border-color: var(--apple-blue); color: var(--apple-blue); }
+  .pill.active {
+    background: var(--apple-blue);
+    border-color: var(--apple-blue);
+    color: #fff;
+  }
+  .results-note {
+    text-align: center;
+    margin-top: 18px;
+    font-size: var(--fs-body-sm);
+    color: var(--ash);
+  }
+
+  /* ---------- Category sections ---------- */
+  section.category {
+    padding: 76px 22px 12px;
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  section.category.in-view { opacity: 1; transform: translateY(0); }
+
+  .cat-head {
+    max-width: 1280px;
+    margin: 0 auto 36px;
+  }
+  .cat-head-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .cat-icon {
+    width: 34px; height: 34px;
+    flex: none;
+    border-radius: 10px;
+    background: var(--ice);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--apple-blue);
+  }
+  .cat-icon svg { width: 18px; height: 18px; }
+  h2.cat-title {
+    font-weight: 600;
+    font-size: var(--fs-heading);
+    letter-spacing: -0.012em;
+    margin: 0;
+    color: var(--carbon);
+  }
+  .cat-copy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+    max-width: 1000px;
+  }
+  @media (max-width: 780px) {
+    .cat-copy { grid-template-columns: 1fr; }
+  }
+  .cat-copy-block .label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--mist);
+    display: block;
+    margin-bottom: 5px;
+  }
+  .cat-copy-block p { margin: 0; color: var(--graphite); font-size: var(--fs-body-sm); line-height: 1.5; }
+
+  /* ---------- Card grid ---------- */
+  .card-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+  }
+  @media (max-width: 980px) { .card-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .card-grid { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-rest);
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: box-shadow .25s ease, transform .25s ease, opacity .5s ease;
+  }
+  .card.card-visible { opacity: 1; transform: translateY(0); }
+  .card:hover { box-shadow: var(--shadow-hover); transform: translateY(-3px); }
+
+  .card-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    overflow: hidden;
+  }
+  .card-video img.poster {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: opacity .3s ease;
+  }
+  .card-video iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: 0;
+    opacity: 0;
+    transition: opacity .35s ease;
+  }
+  .card-video iframe.loaded { opacity: 1; }
+  .card-video.playing img.poster { opacity: 0; }
+  .play-badge {
+    position: absolute;
+    right: 10px; bottom: 10px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: #fff;
+    background: rgba(0,0,0,.55);
+    border-radius: 100px;
+    padding: 4px 9px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .card-body {
+    padding: 18px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+  }
+  .card-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 100px;
+    background: var(--ice);
+    color: var(--graphite);
+    border: 1px solid var(--pebble);
+  }
+  .badge.industry { color: var(--apple-blue); border-color: #cfe4fb; background: #f0f7ff; }
+
+  h3.card-title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.006em;
+    color: var(--carbon);
+    line-height: 1.3;
+  }
+  .card-company {
+    font-size: 12px;
+    color: var(--mist);
+    margin-top: -6px;
+  }
+
+  .card-field .label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--mist);
+    display: block;
+    margin-bottom: 2px;
+  }
+  .card-field p { margin: 0; font-size: 13.5px; color: var(--graphite); line-height: 1.45; }
+
+  .value-list { display: flex; flex-direction: column; gap: 5px; margin-top: 2px; }
+  .value-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--success);
+    font-weight: 500;
+  }
+  .value-item svg { width: 13px; height: 13px; flex: none; }
+
+  .card-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 10px;
+    padding-top: 4px;
+  }
+  .btn {
+    flex: 1;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 9px 10px;
+    border-radius: 100px;
+    transition: background .16s ease, color .16s ease, border-color .16s ease;
+  }
+  .btn-outline {
+    border: 1px solid var(--pebble);
+    color: var(--carbon);
+    background: transparent;
+  }
+  .btn-outline:hover { border-color: var(--carbon); }
+  .btn-solid {
+    border: 1px solid var(--apple-blue);
+    background: var(--apple-blue);
+    color: #fff;
+  }
+  .btn-solid:hover { background: #0060c2; }
+
+  .card-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--mist);
+    font-size: var(--fs-body-sm);
+    padding: 40px 0;
+  }
+
+  /* ---------- CTA ---------- */
+  section.final-cta {
+    margin: 96px 22px 80px;
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    background: var(--carbon);
+    border-radius: 24px;
+    padding: 72px 32px;
+    text-align: center;
+  }
+  section.final-cta h2 {
+    color: #fff;
+    font-weight: 600;
+    font-size: clamp(1.7rem, 4vw, var(--fs-heading));
+    max-width: 640px;
+    margin: 0 auto 28px;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+  }
+  .cta-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+  .cta-btn {
+    padding: 13px 26px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .cta-btn.primary { background: var(--apple-blue); color: #fff; }
+  .cta-btn.primary:hover { background: var(--signal-blue); }
+  .cta-btn.secondary { border: 1px solid #4a4a4c; color: #fff; }
+  .cta-btn.secondary:hover { border-color: #fff; }
+
+  .section-divider {
+    max-width: 1280px;
+    margin: 0 auto;
+    height: 1px;
+    background: var(--hairline);
+  }
+</style>
+
+<header class="hero">
+  <div class="hero-field" aria-hidden="true"></div>
+  <div class="hero-inner">
+    <div class="hero-readout">
+      <span class="readout-chip">CCTV&#8209;NATIVE &middot; NO NEW HARDWARE</span>
+      <span class="readout-chip">DET_CONF <strong>0.99</strong></span>
+      <span class="readout-chip">29 LIVE DEPLOYMENTS</span>
+    </div>
+    <h1>Computer Vision in Industrial Operations</h1>
+    <p class="hero-sub">Explore real-world deployments where Visotonics turns existing CCTV infrastructure into intelligent inspection, monitoring and automation systems &mdash; no new cameras required.</p>
+  </div>
+</header>
+
+<section class="intro">
+  <div class="measure">
+    <p>Every case study below runs on the same cameras already installed on a customer's line, dock or yard. Browse by capability &mdash; safety, counting, warehouse intelligence, production, inspection and analytics &mdash; to see how each solution deploys on infrastructure you already own.</p>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="stats-grid">
+    <div><div class="stat-num" data-count="29" data-suffix="+">0</div><div class="stat-label">Industrial Use Cases</div></div>
+    <div><div class="stat-num" data-count="6">0</div><div class="stat-label">Solution Categories</div></div>
+    <div><div class="stat-num" data-count="8" data-suffix="+">0</div><div class="stat-label">Industries</div></div>
+    <div><div class="stat-num" data-count="99" data-suffix="%">0</div><div class="stat-label">Detection Accuracy</div></div>
+  </div>
+</section>
+
+<nav class="cat-nav" aria-label="Case study categories">
+  <div class="cat-nav-scroll" id="catNav">
+    <button class="cat-nav-btn active" data-target="safety">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 5-3.2 8.4-7 9-3.8-.6-7-4-7-9V6l7-3z"/></svg>
+      Safety
+    </button>
+    <button class="cat-nav-btn" data-target="counting">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v16M9 4v16M15 8h5M15 12h5M15 16h5"/></svg>
+      Counting
+    </button>
+    <button class="cat-nav-btn" data-target="warehouse">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10l9-6 9 6v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z"/><path d="M9 20v-7h6v7"/></svg>
+      Warehouse
+    </button>
+    <button class="cat-nav-btn" data-target="production">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1 1.55V21a2 2 0 11-4 0v-.09a1.7 1.7 0 00-1-1.55 1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.7 1.7 0 00.34-1.87 1.7 1.7 0 00-1.55-1H3a2 2 0 110-4h.09a1.7 1.7 0 001.55-1 1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06a1.7 1.7 0 001.87.34H9a1.7 1.7 0 001-1.55V3a2 2 0 114 0v.09a1.7 1.7 0 001 1.55 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06a1.7 1.7 0 00-.34 1.87V9a1.7 1.7 0 001.55 1H21a2 2 0 110 4h-.09a1.7 1.7 0 00-1.55 1z"/></svg>
+      Production
+    </button>
+    <button class="cat-nav-btn" data-target="inspection">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/><path d="M8 10.5l1.7 1.7L13.5 8"/></svg>
+      Inspection
+    </button>
+    <button class="cat-nav-btn" data-target="digital-twin">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l8-4 8 4-8 4-8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>
+      Analytics
+    </button>
+  </div>
+</nav>
+
+<section class="filters">
+  <div class="filters-inner">
+    <div class="search-row">
+      <input type="search" class="search-input" id="searchInput" placeholder="Search use cases, e.g. &ldquo;sack counting&rdquo;" aria-label="Search use cases">
+    </div>
+    <div class="filter-groups">
+      <div class="filter-group" id="industryFilters">
+        <span class="filter-group-label">Industry</span>
+        <button class="pill active" data-filter-type="industry" data-value="all">All</button>
+      </div>
+      <div class="filter-group" id="capabilityFilters">
+        <span class="filter-group-label">AI Capability</span>
+        <button class="pill active" data-filter-type="capability" data-value="all">All</button>
+      </div>
+    </div>
+    <p class="results-note" id="resultsNote"></p>
+  </div>
+</section>
+
+<main id="categoriesRoot"></main>
+
+<section class="final-cta">
+  <h2>Ready to transform your existing CCTV cameras into intelligent industrial monitoring systems?</h2>
+  <div class="cta-actions">
+    <a class="cta-btn primary" href="https://visotonics.com/contact">Book a Demo</a>
+    <a class="cta-btn secondary" href="https://visotonics.com/contact">Talk to an Expert</a>
+  </div>
+</section>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------------- Category definitions ---------------- */
+  var CATEGORIES = [
+    {
+      id: "safety",
+      title: "Worker Safety",
+      problem: "Supervisors can't watch every line, yard and aisle at once, so PPE gaps and proximity hazards go unnoticed until something goes wrong.",
+      outcome: "Continuous, camera-based detection of missing safety gear and forklift proximity, alerting supervisors the moment it happens.",
+      icon: "safety"
+    },
+    {
+      id: "counting",
+      title: "Counting & Inventory",
+      problem: "Manual tallies at docks, benches and conveyors are slow, and small errors compound quickly at high throughput.",
+      outcome: "Automated, camera-based counts of sacks, boxes, bottles, bags and pipes, logged the moment stock moves.",
+      icon: "counting"
+    },
+    {
+      id: "warehouse",
+      title: "Warehouse Intelligence",
+      problem: "Loading, unloading and storage activity spans too many zones to track consistently from the floor.",
+      outcome: "A single, continuous camera-based view of warehouse activity, from dock to storage.",
+      icon: "warehouse"
+    },
+    {
+      id: "production",
+      title: "Production Monitoring",
+      problem: "Line performance and labour productivity are usually estimated, not measured, without stopping the line to observe.",
+      outcome: "Continuous visibility into production lines and bench operations, without interrupting the process.",
+      icon: "production"
+    },
+    {
+      id: "inspection",
+      title: "Quality Inspection",
+      problem: "Manual SKU, MRP and label checks slow lines down and still let mismatches through.",
+      outcome: "Automated SKU and label verification, read directly off the line as product moves.",
+      icon: "inspection"
+    },
+    {
+      id: "digital-twin",
+      title: "Digital Twin & Analytics",
+      problem: "Operations data lives on the factory floor, disconnected from any live system of record.",
+      outcome: "A live digital model of the operation, fed directly from cameras already in place.",
+      icon: "digital-twin"
+    }
+  ];
+
+  var ICONS = {
+    safety: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3l7 3v6c0 5-3.2 8.4-7 9-3.8-.6-7-4-7-9V6l7-3z"/></svg>',
+    counting: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4v16M9 4v16M15 8h5M15 12h5M15 16h5"/></svg>',
+    warehouse: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10l9-6 9 6v9a1 1 0 01-1 1H4a1 1 0 01-1-1v-9z"/><path d="M9 20v-7h6v7"/></svg>',
+    production: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1 1.55V21a2 2 0 11-4 0v-.09a1.7 1.7 0 00-1-1.55 1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.7 1.7 0 00.34-1.87 1.7 1.7 0 00-1.55-1H3a2 2 0 110-4h.09a1.7 1.7 0 001.55-1 1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06a1.7 1.7 0 001.87.34H9a1.7 1.7 0 001-1.55V3a2 2 0 114 0v.09a1.7 1.7 0 001 1.55 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06a1.7 1.7 0 00-.34 1.87V9a1.7 1.7 0 001.55 1H21a2 2 0 110 4h-.09a1.7 1.7 0 00-1.55 1z"/></svg>',
+    inspection: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/><path d="M8 10.5l1.7 1.7L13.5 8"/></svg>',
+    "digital-twin": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7l8-4 8 4-8 4-8-4z"/><path d="M4 7v10l8 4 8-4V7"/><path d="M12 11v10"/></svg>'
+  };
+
+  var CHECK_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>';
+
+  /* ---------------- Case study dataset (from source spreadsheet) ---------------- */
+  var CASES = [
+    { cat:"safety", title:"Safety Gear Detection \u2014 Production Line", company:"NiroVision", industry:"Manufacturing", capabilities:["Object Detection","Pose Estimation"], problem:"Supervisors can't watch every line for missing helmets or vests.", solution:"Existing line cameras flag missing PPE the moment a worker enters frame.", value:["Improved Worker Safety","Reduced Manual Inspection"], yt:"TTmThHZvcpo", drive:"1c_aSEXpvMlFubNhDX5K5Jq1Ok9I5Cal6" },
+    { cat:"safety", title:"Safety Gear Detection \u2014 Yard", company:"NiroVision", industry:"Logistics", capabilities:["Object Detection","Pose Estimation"], problem:"Yard activity spans a wide, moving area that's hard to patrol continuously.", solution:"Yard-facing cameras track PPE compliance across gates, cranes and vehicle lanes.", value:["Improved Worker Safety"], yt:"heEqoFn6xfU", drive:"1ObBYW1IwH2qnNzjrhQD64WHXQhvb2ORM" },
+    { cat:"safety", title:"Forklift Proximity Alert", company:"NiroVision", industry:"Warehouse", capabilities:["Object Detection","Tracking"], problem:"Forklifts and foot traffic sharing narrow aisles create blind-spot collisions.", solution:"Cameras track forklift-to-worker distance and flag close-proximity events live.", value:["Improved Worker Safety"], yt:"pwcaJ-QexPI", drive:"1gtKu7XGiS-pwSHexFkN3VDRrWydP_vLI" },
+
+    { cat:"counting", title:"Product Counting \u2014 Production Line", company:"Taryser", industry:"Manufacturing", capabilities:["Counting"], problem:"Manual tallies at the end of a line slow down shift reporting.", solution:"Cameras count finished units as they pass, in real time.", value:["Automated Counting","Reduced Human Error"], yt:"GqAZ6wGjCNw", drive:"1ASi_-hn3kBIZj6K1BAjD6_4saJliGlfz" },
+    { cat:"counting", title:"Box Counting \u2014 Loading", company:"Cadbird Tech Security", industry:"Logistics", capabilities:["Counting"], problem:"Box counts at loading bays are logged by hand and drift from actuals.", solution:"Camera-based counting logs every box as it's loaded onto the vehicle.", value:["Automated Counting","Reduced Human Error"], yt:"Zg3LgAcH2Js", drive:"1WAM4AXF8ylNzEO0WD0CV8Ac6Fm68jGLw" },
+    { cat:"counting", title:"Sack Counting \u2014 Loading", company:"Cadbird Tech Security", industry:"Logistics", capabilities:["Counting"], problem:"High-volume sack loading outpaces manual tally sheets.", solution:"Cameras count sacks in real time as they move onto the vehicle.", value:["Automated Counting","Reduced Human Error"], yt:"F0pECK-7yTE", drive:"1mhJTQOntu-VXDipsm781Tq6MDlLruKvH" },
+    { cat:"counting", title:"Bottle Counting \u2014 Production Line", company:"Abto Soft", industry:"FMCG", capabilities:["Counting"], problem:"Fast-moving bottling lines are difficult to tally by eye.", solution:"Line-facing cameras count bottles continuously at production speed.", value:["Automated Counting","Increased Throughput"], yt:"b9RueJBFsgM", drive:"1D6gDBv4qmPtMRB4rmdTvPolMoqjugsMY" },
+    { cat:"counting", title:"Item Counting", company:"Softphil Ai", industry:"Packaging", capabilities:["Counting"], problem:"Packed items are tallied manually before dispatch, adding delay.", solution:"Cameras count items automatically ahead of the dispatch stage.", value:["Automated Counting","Increased Throughput"], yt:"8bKz3hU80XY", drive:"1PGSEOxD-nVuXVrtzgTAiSlvPZHnOVITM" },
+    { cat:"counting", title:"Cement Bag Detection & Counting", company:null, industry:"Manufacturing", capabilities:["Object Detection","Counting"], problem:"Cement bag counts at dispatch are tracked manually and slow down turnaround.", solution:"Cameras detect and count cement bags as they're loaded.", value:["Automated Counting","Reduced Human Error"], yt:"5tmeS9J_Grs", drive:"1LTHsZBCkRzo_lwo8Npqz0MFv719IyomP" },
+    { cat:"counting", title:"Loading & Counting of Sacks over a Conveyor Belt", company:"Camcontador AI", industry:"Logistics", capabilities:["Counting"], problem:"Conveyor-fed loading makes manual sack tallies unreliable at speed.", solution:"Cameras count sacks directly off the conveyor as they're loaded.", value:["Automated Counting","Reduced Human Error"], yt:"E4DfH-Eh8GI", drive:"10MzpTiOT8j92RzIx7JCSQ5kdQYGr8wQS" },
+    { cat:"counting", title:"Sacks Counting \u2014 Warehouse", company:"Camcontador AI", industry:"Warehouse", capabilities:["Counting"], problem:"Sack inventory inside the warehouse is hard to keep current by hand.", solution:"Cameras keep a running, camera-verified sack count across the warehouse.", value:["Automated Counting"], yt:"BNWsZq_iNXI", drive:"15nHm2_7VQ2EtBmt-lUVtnEHGGbTlOSiK" },
+    { cat:"counting", title:"Sugar Bag Counting over Conveyor", company:"Camcontador AI", industry:"Food", capabilities:["Counting"], problem:"High-speed sugar bag conveyance is difficult to tally manually.", solution:"Cameras count sugar bags directly on the conveyor line.", value:["Automated Counting","Increased Throughput"], yt:"IXEJ4WEf4Gw", drive:"1skxIgCuiKmqEgbG77SfSRQ5vKRNO_CY5" },
+    { cat:"counting", title:"Box Counting \u2014 Unloading", company:"Camcontador AI", industry:"Logistics", capabilities:["Counting"], problem:"Unloading counts are tallied by hand and prone to mismatch with manifests.", solution:"Cameras count boxes automatically as they're unloaded.", value:["Automated Counting","Reduced Human Error"], yt:"BjCYhl9wPqE", drive:"1Qb5-FY0krbmCyZt9aZ6qZroFfRJHuRQL" },
+    { cat:"counting", title:"Pipe Counter \u2014 Production Line", company:"Camcontador AI", industry:"Steel", capabilities:["Counting"], problem:"Pipe stock on the line is difficult to tally accurately by eye.", solution:"Cameras count pipes automatically as they move down the line.", value:["Automated Counting","Reduced Human Error"], yt:"DHY8qByOQQg", drive:"1RLRmFjj5MzrPzNVVlIklDWi4oAJ4APQf" },
+    { cat:"counting", title:"Loading & Counting of Sacks", company:"Goraka Vision AI", industry:"Logistics", capabilities:["Counting"], problem:"Sack loading counts are tracked manually and slow down dispatch.", solution:"Cameras count sacks automatically as they're loaded for dispatch.", value:["Automated Counting"], yt:"sh39JBNLAo0", drive:"1RZyxNfSb-9i1ZWDuNBaNP27K7T8tQ9fm" },
+    { cat:"counting", title:"Sacks Counting \u2014 Interface", company:"Uchit Technology AI", industry:"Warehouse", capabilities:["Counting","Digital Twin"], problem:"Counting data rarely reaches the systems that need it in real time.", solution:"Camera-based counts feed a live dashboard for warehouse teams.", value:["Automated Counting","Reduced Manual Inspection"], yt:"2KLondBOwqg", drive:"10m1Fiii8S4dMb-cDnA0R1KjVceMrW2uf" },
+    { cat:"counting", title:"Sacks Counting \u2014 Unloading", company:"Ample Trails", industry:"Logistics", capabilities:["Counting"], problem:"Unloading counts are tracked by hand and slow down dock turnaround.", solution:"Cameras count sacks automatically as they're unloaded.", value:["Automated Counting","Reduced Human Error"], yt:"PFMO1CKzEbE", drive:"1PJ97wD52UNXEDpYnbkM7dnjXsIisEQXx" },
+    { cat:"counting", title:"Flour Bag Counting", company:null, industry:"Food", capabilities:["Counting"], problem:"Flour bag counts at dispatch are tracked manually and prone to error.", solution:"Cameras count flour bags automatically as they move to dispatch.", value:["Automated Counting","Reduced Human Error"], yt:"QfgYiov23hk", drive:"1ubj2YSkypXCeGTyp5VIcZngJ5jgb6Hvm" },
+    { cat:"counting", title:"Bag Counting over Conveyor System", company:null, industry:"FMCG", capabilities:["Counting"], problem:"Conveyor-fed bag counts are hard to verify manually at speed.", solution:"Cameras count bags directly on the conveyor system.", value:["Automated Counting"], yt:"GMBioLaMPuY", drive:"1p6_DYq9njNQIZLnMP3GVjOVux5IVsFKH" },
+    { cat:"counting", title:"Sack Counting \u2014 Unloading", company:"AI Alpha Tech", industry:"Logistics", capabilities:["Counting"], problem:"Unloading tallies are recorded by hand and slow down dock turnaround.", solution:"Cameras count sacks automatically as they're unloaded.", value:["Automated Counting","Reduced Human Error"], yt:"kXLDqjUfiFo", drive:"1VsudRf2qxTKeyDrpLPwurVAAzG-c-AXQ" },
+    { cat:"counting", title:"Sack Counting \u2014 Loading in Truck", company:null, industry:"Logistics", capabilities:["Counting"], problem:"Truck-loading counts are tallied manually and slow down dispatch.", solution:"Cameras count sacks automatically as they're loaded onto the truck.", value:["Automated Counting","Reduced Human Error"], yt:"wnhXVlF-viM", drive:"1jf837AZCaAWHueJPcUlUW11gkCOBT8f7" },
+
+    { cat:"warehouse", title:"End-to-End Warehouse Monitoring", company:"Assert AI", industry:"Warehouse", capabilities:["Object Detection","Tracking","Digital Twin"], problem:"Warehouse activity spans many zones that are hard to monitor as one system.", solution:"A single camera-based system covers the warehouse end to end, from dock to storage.", value:["Reduced Manual Inspection","Improved Worker Safety"], yt:"c7olYEkAPB0", drive:"1I1HaBz5LtJIDwm9LkFR2WM5xGYFGAtM5" },
+
+    { cat:"production", title:"Box Packing Monitoring at Bench", company:"Corpitech", industry:"Packaging", capabilities:["Pose Estimation","Tracking"], problem:"Bench-level packing productivity is hard to observe without a supervisor present.", solution:"Cameras track packing motion and box handling at each bench continuously.", value:["Increased Throughput","Reduced Manual Inspection"], yt:"j6LGtYTbWq0", drive:"1rcugPn8KJ_1berF7Kq_AhDPvTu_LLYLp" },
+    { cat:"production", title:"Product Identification & Labour Productivity Monitoring", company:"NVIDIA", industry:"Manufacturing", capabilities:["Object Detection","Tracking"], problem:"Labour output on a line is typically estimated, not measured.", solution:"Cameras identify products and track labour activity along the line.", value:["Increased Throughput","Reduced Manual Inspection"], yt:"mZWSFUjhsJE", drive:"14tK3OJ8sASG7H4E2If__bkG1mWXgTEQ6" },
+    { cat:"production", title:"Item Detection \u2014 Production Line / Industrial Process", company:"NVIDIA", industry:"Manufacturing", capabilities:["Object Detection"], problem:"Process steps are hard to verify without dedicated sensors on the line.", solution:"Existing CCTV detects items and process events at each stage.", value:["Increased Throughput","Reduced Manual Inspection"], yt:"IPJOIc1ymB4", drive:"1azUdSCSnJIF-Fw0eVv396I3lhkLKIo0s" },
+    { cat:"production", title:"Product Detection", company:"Assert AI", industry:"Manufacturing", capabilities:["Object Detection"], problem:"Verifying product presence at each stage usually needs manual spot checks.", solution:"Cameras detect product presence continuously along the process.", value:["Reduced Manual Inspection"], yt:"LT4L7UmHL3s", drive:"1shYEyqoja5e2ccxEfaMdF7R4Y98_6bUp" },
+
+    { cat:"inspection", title:"Box SKU Identification & Counting", company:"Jidoka Technologies", industry:"Packaging", capabilities:["OCR","Counting"], problem:"Mixed SKUs on a shared line are hard to verify and count by hand.", solution:"Cameras read SKU labels and count boxes by type as they pass.", value:["Reduced Manual Inspection","Automated Counting"], yt:"kZTlIvc8bBk", drive:"1unuEkchlD6bcsq1N7b-PrGD1n6nub4g7" },
+    { cat:"inspection", title:"Sacks Counting & MRP Detection", company:"Accsys Electronics", industry:"Chemical", capabilities:["OCR","Counting"], problem:"MRP and batch labels on sacks are checked manually, if at all.", solution:"Cameras read MRP labels and count sacks in the same pass.", value:["Reduced Manual Inspection","Automated Counting"], yt:"WZIbBCePUg0", drive:"1qbhHWjoFdLH-wMaWG_LVNNPj31AZqqm8" },
+
+    { cat:"digital-twin", title:"Item Detection & Digital Twin", company:"NVIDIA", industry:"Manufacturing", capabilities:["Digital Twin"], problem:"Floor activity isn't reflected anywhere outside the floor itself.", solution:"Detections feed a live digital twin of the production process.", value:["Reduced Manual Inspection"], yt:"2UIx3sx0a68", drive:"1bztEeo2bCrVMybFHKR6-GQ8CMxsOK1uK" }
+  ];
+
+  /* ---------------- Build category sections + card markup ---------------- */
+  var root = document.getElementById("categoriesRoot");
+  var allIndustries = [];
+  var allCapabilities = [];
+
+  CASES.forEach(function (c) {
+    if (allIndustries.indexOf(c.industry) === -1) allIndustries.push(c.industry);
+    c.capabilities.forEach(function (cap) {
+      if (allCapabilities.indexOf(cap) === -1) allCapabilities.push(cap);
+    });
+  });
+  allIndustries.sort();
+  allCapabilities.sort();
+
+  function fillFilterGroup(containerId, type, values) {
+    var container = document.getElementById(containerId);
+    values.forEach(function (v) {
+      var btn = document.createElement("button");
+      btn.className = "pill";
+      btn.setAttribute("data-filter-type", type);
+      btn.setAttribute("data-value", v);
+      btn.textContent = v;
+      container.appendChild(btn);
+    });
+  }
+  fillFilterGroup("industryFilters", "industry", allIndustries);
+  fillFilterGroup("capabilityFilters", "capability", allCapabilities);
+
+  function cardMarkup(c, idx) {
+    var badges = '<span class="badge industry">' + c.industry + '</span>' +
+      c.capabilities.map(function (cap) { return '<span class="badge">' + cap + '</span>'; }).join("");
+    var valueItems = c.value.map(function (v) {
+      return '<div class="value-item">' + CHECK_ICON + '<span>' + v + '</span></div>';
+    }).join("");
+    var companyLine = c.company ? c.company : "Field Deployment";
+    var driveUrl = "https://drive.google.com/file/d/" + c.drive + "/view";
+    var contactUrl = "https://visotonics.com/contact";
+
+    return (
+      '<article class="card" data-cat="' + c.cat + '" data-industry="' + c.industry + '" data-capabilities="' + c.capabilities.join("|") + '" data-search="' + (c.title + " " + companyLine + " " + c.industry + " " + c.capabilities.join(" ")).toLowerCase() + '">' +
+        '<div class="card-video" data-yt="' + c.yt + '">' +
+          '<img class="poster" loading="lazy" alt="" src="https://img.youtube.com/vi/' + c.yt + '/hqdefault.jpg">' +
+          '<span class="play-badge">LIVE FEED</span>' +
+        '</div>' +
+        '<div class="card-body">' +
+          '<div class="card-badges">' + badges + '</div>' +
+          '<div>' +
+            '<h3 class="card-title">' + c.title + '</h3>' +
+            '<div class="card-company">' + companyLine + '</div>' +
+          '</div>' +
+          '<div class="card-field"><span class="label">Business Problem</span><p>' + c.problem + '</p></div>' +
+          '<div class="card-field"><span class="label">Solution</span><p>' + c.solution + '</p></div>' +
+          '<div class="value-list">' + valueItems + '</div>' +
+          '<div class="card-actions">' +
+            '<a class="btn btn-outline" href="' + driveUrl + '" target="_blank" rel="noopener">Read More</a>' +
+            '<a class="btn btn-solid" href="' + contactUrl + '">Book Demo</a>' +
+          '</div>' +
+        '</div>' +
+      '</article>'
+    );
+  }
+
+  CATEGORIES.forEach(function (cat) {
+    var items = CASES.filter(function (c) { return c.cat === cat.id; });
+    var section = document.createElement("section");
+    section.className = "category";
+    section.id = cat.id;
+
+    section.innerHTML =
+      '<div class="cat-head">' +
+        '<div class="cat-head-top">' +
+          '<span class="cat-icon">' + ICONS[cat.icon] + '</span>' +
+          '<h2 class="cat-title">' + cat.title + '</h2>' +
+        '</div>' +
+        '<div class="cat-copy">' +
+          '<div class="cat-copy-block"><span class="label">The Problem</span><p>' + cat.problem + '</p></div>' +
+          '<div class="cat-copy-block"><span class="label">The Outcome</span><p>' + cat.outcome + '</p></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="card-grid" data-grid="' + cat.id + '">' +
+        items.map(cardMarkup).join("") +
+      '</div>';
+
+    root.appendChild(section);
+    var divider = document.createElement("div");
+    divider.className = "section-divider";
+    root.appendChild(divider);
+  });
+
+  /* ---------------- Sticky nav: scroll + active highlighting ---------------- */
+  var navButtons = Array.prototype.slice.call(document.querySelectorAll(".cat-nav-btn"));
+  navButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var target = document.getElementById(btn.getAttribute("data-target"));
+      if (!target) return;
+      var navHeight = document.querySelector(".cat-nav").offsetHeight;
+      var y = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 8;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    });
+  });
+
+  var sectionEls = Array.prototype.slice.call(document.querySelectorAll("section.category"));
+  var navObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        navButtons.forEach(function (b) {
+          b.classList.toggle("active", b.getAttribute("data-target") === entry.target.id);
+        });
+      }
+    });
+  }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+  sectionEls.forEach(function (s) { navObserver.observe(s); });
+
+  /* ---------------- Section reveal on scroll ---------------- */
+  var revealObserver = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in-view");
+        obs.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  sectionEls.forEach(function (s) { revealObserver.observe(s); });
+
+  /* ---------------- Card stagger-in ---------------- */
+  var cardObserver = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        var el = entry.target;
+        var siblings = Array.prototype.slice.call(el.parentElement.children);
+        var i = siblings.indexOf(el);
+        el.style.transitionDelay = Math.min(i % 3, 2) * 70 + "ms";
+        el.classList.add("card-visible");
+        obs.unobserve(el);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll(".card").forEach(function (c) { cardObserver.observe(c); });
+
+  /* ---------------- Lazy-load + viewport autoplay/pause for video cards ---------------- */
+  function ytSrc(id) {
+    return "https://www.youtube.com/embed/" + id +
+      "?enablejsapi=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&loop=1&playlist=" + id;
+  }
+  function postToPlayer(iframe, func) {
+    if (!iframe || !iframe.contentWindow) return;
+    iframe.contentWindow.postMessage(JSON.stringify({ event: "command", func: func, args: [] }), "*");
+  }
+
+  var lazyObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var box = entry.target;
+      if (entry.isIntersecting && !box.dataset.loaded) {
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute("allow", "autoplay; encrypted-media");
+        iframe.setAttribute("loading", "lazy");
+        iframe.src = ytSrc(box.getAttribute("data-yt"));
+        iframe.addEventListener("load", function () { iframe.classList.add("loaded"); });
+        box.appendChild(iframe);
+        box.dataset.loaded = "1";
+        lazyObserver.unobserve(box);
+        playObserver.observe(box);
+      }
+    });
+  }, { rootMargin: "300px 0px" });
+  document.querySelectorAll(".card-video").forEach(function (b) { lazyObserver.observe(b); });
+
+  var playObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var box = entry.target;
+      var iframe = box.querySelector("iframe");
+      if (!iframe) return;
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        postToPlayer(iframe, "playVideo");
+        box.classList.add("playing");
+      } else {
+        postToPlayer(iframe, "pauseVideo");
+        box.classList.remove("playing");
+      }
+    });
+  }, { threshold: [0, 0.5, 1] });
+
+  /* ---------------- Animated stat counters ---------------- */
+  var statEls = document.querySelectorAll(".stat-num");
+  var statsObserver = new IntersectionObserver(function (entries, obs) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      var target = parseInt(el.getAttribute("data-count"), 10);
+      var suffix = el.getAttribute("data-suffix") || "";
+      var start = null;
+      var duration = 1100;
+      function step(ts) {
+        if (!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+      obs.unobserve(el);
+    });
+  }, { threshold: 0.6 });
+  statEls.forEach(function (el) { statsObserver.observe(el); });
+
+  /* ---------------- Filters: search + industry + capability ---------------- */
+  var state = { search: "", industry: "all", capability: "all" };
+  var searchInput = document.getElementById("searchInput");
+  var resultsNote = document.getElementById("resultsNote");
+  var allPills = document.querySelectorAll(".pill");
+
+  allPills.forEach(function (pill) {
+    pill.addEventListener("click", function () {
+      var type = pill.getAttribute("data-filter-type");
+      var value = pill.getAttribute("data-value");
+      document.querySelectorAll('.pill[data-filter-type="' + type + '"]').forEach(function (p) {
+        p.classList.remove("active");
+      });
+      pill.classList.add("active");
+      state[type] = value;
+      applyFilters();
+    });
+  });
+
+  searchInput.addEventListener("input", function () {
+    state.search = searchInput.value.trim().toLowerCase();
+    applyFilters();
+  });
+
+  function applyFilters() {
+    var visibleCount = 0;
+    CATEGORIES.forEach(function (cat) {
+      var grid = document.querySelector('.card-grid[data-grid="' + cat.id + '"]');
+      var section = document.getElementById(cat.id);
+      var cards = grid.querySelectorAll(".card");
+      var visibleInSection = 0;
+
+      cards.forEach(function (card) {
+        var matchesIndustry = state.industry === "all" || card.getAttribute("data-industry") === state.industry;
+        var matchesCapability = state.capability === "all" || card.getAttribute("data-capabilities").split("|").indexOf(state.capability) !== -1;
+        var matchesSearch = state.search === "" || card.getAttribute("data-search").indexOf(state.search) !== -1;
+        var show = matchesIndustry && matchesCapability && matchesSearch;
+        card.style.display = show ? "" : "none";
+        if (show) { visibleInSection++; visibleCount++; }
+      });
+
+      var existingEmpty = grid.querySelector(".card-empty");
+      if (visibleInSection === 0) {
+        section.style.display = "none";
+      } else {
+        section.style.display = "";
+        if (existingEmpty) existingEmpty.remove();
+      }
+    });
+
+    resultsNote.textContent = visibleCount === CASES.length
+      ? ""
+      : visibleCount + " of " + CASES.length + " use cases match your filters";
+  }
+})();
+</script>
