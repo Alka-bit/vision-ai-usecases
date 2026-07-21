@@ -282,14 +282,14 @@
     color: var(--carbon);
   }
   .cat-copy {
-    display: grid;
-    margin: 0 auto
-    grid-template-columns: 1fr 1fr;
-    gap: 36px 40px;
-    max-width: 1000px;
-  }
-  @media (max-width: 780px) {
-    .cat-copy { grid-template-columns: 1fr; }
+  max-width: 1160px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 36px 40px;
+}
+@media (max-width: 720px) {
+  .cat-copy { grid-template-columns: 1fr; gap: 28px; }
   }
   .cat-copy-block .label {
     font-family: var(--mono);
