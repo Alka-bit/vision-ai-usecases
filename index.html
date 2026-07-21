@@ -133,37 +133,6 @@
     text-wrap: balance;
   }
  
-  /* ---------- Stats ---------- */
-  section.stats {
-    border-top: 1px solid var(--hairline);
-    border-bottom: 1px solid var(--hairline);
-    padding: 40px 22px;
-  }
-  .stats-grid {
-    max-width: 980px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
-    text-align: center;
-  }
-  @media (max-width: 720px) {
-    .stats-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-  .stat-num {
-    font-family: var(--font);
-    font-weight: 600;
-    font-size: clamp(1.7rem, 4vw, var(--fs-heading));
-    letter-spacing: -0.01em;
-    color: var(--carbon);
-  }
-  .stat-label {
-    margin-top: 6px;
-    font-size: var(--fs-caption);
-    letter-spacing: 0.02em;
-    color: var(--ash);
-  }
- 
   /* ---------- Sticky category nav ---------- */
   nav.cat-nav {
     position: sticky;
@@ -465,15 +434,6 @@
     <p class="hero-sub">Real-world deployments showing how Vision-AI runs on ordinary CCTV infrastructure to power inspection, monitoring and automation across industrial sites.</p>
   </div>
 </header>
- 
-<section class="stats">
-  <div class="stats-grid">
-    <div><div class="stat-num" data-count="30" data-suffix="+">0</div><div class="stat-label">Industrial Use Cases</div></div>
-    <div><div class="stat-num" data-count="5">0</div><div class="stat-label">Solution Categories</div></div>
-    <div><div class="stat-num" data-count="8" data-suffix="+">0</div><div class="stat-label">Industries</div></div>
-    <div><div class="stat-num" data-count="99" data-suffix="%">0</div><div class="stat-label">Detection Accuracy</div></div>
-  </div>
-</section>
  
 <nav class="cat-nav" aria-label="Case study categories">
   <div class="cat-nav-inner">
